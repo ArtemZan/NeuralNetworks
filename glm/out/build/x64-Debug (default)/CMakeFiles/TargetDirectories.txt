@@ -1,0 +1,2 @@
+C:/Users/Professional/Documents/Visual Studio 2019/LearningOpenGL/src/Extra libraries/glm/out/build/x64-Debug (default)/CMakeFiles/edit_cache.dir
+C:/Users/Professional/Documents/Visual Studio 2019/LearningOpenGL/src/Extra libraries/glm/out/build/x64-Debug (default)/CMakeFiles/rebuild_cache.dir
