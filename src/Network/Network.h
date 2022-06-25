@@ -29,7 +29,7 @@ namespace nn
 	extern std::vector<NNenum> errors;
 	extern std::vector<NNenum> warnings;
 
-	inline NNenum GetError()   { if (errors.size())	  return NNenum::NO_ERROR; NNenum r = errors[0];   errors.erase(errors.begin());     return r; }
+	inline NNenum GetError() { if (errors.size())	  return NNenum::NO_ERROR; NNenum r = errors[0];   errors.erase(errors.begin());     return r; }
 	inline NNenum GetWarning() { if (warnings.size()) return NNenum::NO_ERROR; NNenum r = warnings[0]; warnings.erase(warnings.begin()); return r; }
 
 
@@ -39,23 +39,28 @@ namespace nn
 	class Network
 	{
 	public:
-		Network(int layers_count);
+		Network(int layers_count = 0);
 
 		~Network();
 
 		void AddNode(int layer, bool bind = true);
 		void AddNodes(int layer, int number, bool bind = true);
 
-		void Handle(NNData input, NNData* result_buffer);
-
-		void Tune(NNData input, NNData desired_output);
-
-		std::vector<Node>& operator[](int index);
+		std::vector<double> Handle(const std::vector<double>& input);
 
 	private:
-		void HandlingInfo(NNData input, NNData* outputs);
+		std::vector<double> Handle(const std::vector<double>& input, int output_layer);
+	public:
 
-		std::vector<std::vector<Node>>	m_layers;
+		void Tune(const std::vector<double>& input, const std::vector<double>& desired_output);
+		void Tune(const std::vector<double>& input, const std::vector<double>& desired_output, int last_layer);
+
+		std::vector< std::shared_ptr<Node>>& operator[](int index);
+
+	private:
+		//void HandlingInfo(const std::vector<double>& input, const std::vector<double>* outputs);
+
+		std::vector<std::vector<std::shared_ptr<Node>>> m_layers;
 	};
 
 };

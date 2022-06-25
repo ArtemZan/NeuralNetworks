@@ -1,52 +1,46 @@
 #pragma once
 #include <vector>
+#include <memory>
+#include "../../glm/exponential.hpp"
 
 namespace nn
 {
-	struct NNData
+	namespace math
 	{
-		int m_size;
-		double* m_data;
-		NNData(int size = 0);
-		NNData(double* data, int size);
-		NNData(const NNData& data);
-		const NNData& operator= (const NNData& data);
-		inline double& operator[](const int index) { return m_data[index]; }
-		~NNData();
-	};
-
+		inline double Sigmoid(double x)
+		{
+			return 1 / (1 + glm::exp(-x));
+		}
+	}
 
 	class Node
 	{
 	public:
 		Node();
 
-		void BindTo(Node* node, float weight = -1);
-
 		bool SetWeight(unsigned int node_index, float weight);
 
 		struct Bond;
 
-		Bond& GetBondToNext(Node* node);
-		Bond& GetBondToPrev(Node* node);
+		Bond* GetBondToNext(Node* node);
+		Bond* GetBondToPrev(Node* node);
 
-		double Handle(const NNData& input) const;
+		double Handle(const std::vector<double>& input) const;
 
-		void IncreaseOutput();
-		void DecreaseOutput();
-
-	private:
 		struct Bond
 		{
-			Node* node;
+			std::shared_ptr<Node> node;
 			float weight;
 
-			Bond(Node* node, float weight)
+			Bond(const std::shared_ptr<Node>& node, float weight)
 				: node(node), weight(weight)
 			{
 
 			}
+
+			static void Create(std::shared_ptr<Node>& first, std::shared_ptr<Node>& second, float weight = 1);
 		};
+	private:
 
 		//relationships between layers
 		std::vector<Bond> m_next;
