@@ -1,31 +1,46 @@
 #include "Network/Network.h"
 #include <iostream>
 
+using namespace nn;
 
 int main()
 {
-	nn::Network network(2);
-	network.AddNodes(0, 2);
-	network.AddNodes(1, 1);
+	nn::Network network;
+	network.AddLayer(2);
+	network.AddLayer(1);
 
+	std::vector<math::vec> testData({
+		math::vec({0.1, 0.5}),
+		math::vec({0.3, 0.5}),
+		math::vec({0.4, 0.5}),
+		math::vec({0.9, 0.1}),
+		math::vec({0.1, 0.f}),
+		math::vec({0.f, 0.f}),
+		math::vec({0.1, 0.9}),
+		math::vec({0.1, 0.6}),
+		math::vec({0.1, 0.7})
+		});
 
-	std::vector<double> input1({ 0.1, 0.5 });
-	std::vector<double> input2({ 0.5, 0.1 });
-	std::vector<double> output;
+	std::vector<math::vec> testTarget({
+		math::vec({0.6f}),
+		math::vec({0.8f}),
+		math::vec({0.9f}),
+		math::vec({1.f}),
+		math::vec({0.1f}),
+		math::vec({0.f}),
+		math::vec({1.f}),
+		math::vec({0.7f}),
+		math::vec({0.8f})
+		});
 
-	network.Handle(input1);
-	network.Handle(input2);
-
-	for (int i = 0; i < 100000; i++)
+	for (int i = 0; i < testData.size(); i++)
 	{
-		network.Tune(input1, { 0 });
-		network.Tune(input2, { 1 });
+		network.Tune(testData[i], testTarget[i]);
 		//std::cout << network[0][0]->GetBondToNext(network[1][0].get())->weight;
 		//std::cout << network[0][1]->GetBondToNext(network[1][1].get())->weight;
 		//std::cout << network[0][0]->GetBondToNext(network[1][0].get())->weight << "\n";
 	}
 
-	output = network.Handle(input1);
-
+	std::cout << network.Handle({.3f, .4f}) << "\n";
 
 }
